@@ -51,6 +51,22 @@ For a complete list of build and installation options run:
 
     $ make help
 
+This repository includes a Dockerfile for building a Docker image configured with all necessary dependencies for building and testing the library.
+
+To create a container image out of the Dockerfile you can run:
+
+    $ docker build -t fnss-cpp .
+
+Then you can either run a Bash shell on the container:
+
+    $ docker run -v `pwd`:/fnss-cpp --rm -it fnss-cpp
+
+Or run a make target from the container:
+
+    $ docker run -v `pwd`:/fnss-cpp --rm -it fnss-cpp make <target>
+
+Note that the `-v` flag in the commands above mounts the root directory on the project onto `/fnss-cpp` in the container. Any changes made to files in `/fnss-cpp` in the container will persist outside the container.
+
 ## How to use it
 To learn how to use the library you can either look at the documentation in the `doc` folder or look at some examples provided in the `examples` folder.
 Should you need any further information, please contact us and we'll be happy to help you.
