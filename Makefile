@@ -34,6 +34,9 @@ VERSION = 0.6.1
 NAME = fnss
 ARCHIVE_NAME  = fnss-cpp-api-$(VERSION)
 
+# BUILD TARGET
+BUILDTARGET = $(shell uname)
+
 # Compiler options
 LDFLAGS  =
 LDLIBS   =
@@ -41,10 +44,10 @@ LDLIBS   =
 CLANG_INSTALLED := $(shell clang++ --version 2>/dev/null)
 ifdef CLANG_INSTALLED
 CXX      = clang++
-CXXFLAGS = -g -O2 -Wshadow -Wall -Wfatal-errors -std=c++11 -fPIC
+CXXFLAGS = -g -Wshadow -Wall -Wfatal-errors -std=c++11 -fPIC
 else
 CXX      = g++
-CXXFLAGS = -g -O2 -Wall -Wfatal-errors -fPIC
+CXXFLAGS = -g -Wall -Wfatal-errors -fPIC
 endif
 
 # File extensions / ignored files.
@@ -132,8 +135,13 @@ remove_root = $(shell echo $1 | sed s/\[.]\*\[/]\*\[^/]\*\\\///)
 get_src     =  $2/$(call remove_root, $(basename $1)$(SRC_EXT))
 get_bin     = $(filter %$(notdir $1), $(BIN))
 get_bin_dep = $(filter $(subst $(HDR_EXT),$(SRC_EXT), $(filter $(patsubst ./%,%,$(HDR)), $1)), $(patsubst ./%,%,$(SRC)))
+ifeq ($(BUILDTARGET),Darwin)
+DARWINSEDFIX = "\'\'"
+else
+DARWINSEDFIX = ""
+endif
 make_dep    = @$(CXX) -MM $(CXXFLAGS) $1 > $2.d; \
-              sed -i 's/.*:/$(subst /,\/,$@):/' $@.d
+              sed -i $(DARWINSEDFIX) 's/.*:/$(subst /,\/,$@):/' $@.d
 
 # Compile a file and print message. Args: <src_file> <dest_file> <cxx_options>
 compile     = @echo "Compiling:   $(strip $1) -> $(strip $2): " $(shell $(call compile_cmd, $1, $2, $3))
@@ -159,8 +167,8 @@ run_test    = printf "Executing:   $1:  "; \
              if [ $$OUT -eq 0 ]; then \
                  echo "OK"; \
              else \
-                 rm $1; \
-                 exit 1; \
+                  rm $1; \
+                  exit 1; \
              fi \
 
 # Summary message
