@@ -136,12 +136,12 @@ get_src     =  $2/$(call remove_root, $(basename $1)$(SRC_EXT))
 get_bin     = $(filter %$(notdir $1), $(BIN))
 get_bin_dep = $(filter $(subst $(HDR_EXT),$(SRC_EXT), $(filter $(patsubst ./%,%,$(HDR)), $1)), $(patsubst ./%,%,$(SRC)))
 ifeq ($(BUILDTARGET),Darwin)
-DARWINSEDFIX = "\'\'"
-else
-DARWINSEDFIX = ""
-endif
 make_dep    = @$(CXX) -MM $(CXXFLAGS) $1 > $2.d; \
-              sed -i $(DARWINSEDFIX) 's/.*:/$(subst /,\/,$@):/' $@.d
+              sed -i '' 's/.*:/$(subst /,\/,$@):/' $@.d
+else
+make_dep    = @$(CXX) -MM $(CXXFLAGS) $1 > $2.d; \
+              sed -i 's/.*:/$(subst /,\/,$@):/' $@.d
+endif
 
 # Compile a file and print message. Args: <src_file> <dest_file> <cxx_options>
 compile     = @echo "Compiling:   $(strip $1) -> $(strip $2): " $(shell $(call compile_cmd, $1, $2, $3))
