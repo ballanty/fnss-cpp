@@ -1,6 +1,7 @@
 #include "quantity.h"
 
 #include <sstream>
+#include <regex>
 
 namespace fnss {
 
@@ -20,8 +21,19 @@ Quantity::Quantity(const MeasurementUnit &converter_) :
 	value(0), unit(converter_.getBaseUnit()), converter(converter_) {}
 
 void Quantity::fromString(const std::string &str) {
-	std::istringstream ss(str);
-	ss>>this->value>>this->unit;
+
+    std::string regexpstr = "([0-9]+)(\\.[0-9]*)? *([^ \t]*)";
+    std::regex reg(regexpstr);
+    std::smatch match;
+    std::regex_search(str, match, reg);
+
+    if ( !match.empty() ) {
+        this->value = std::stod(match[1].str() + match[2].str());
+        this->unit = match[3];
+    } else {
+        this->value = 0.0;
+        this->unit = "";
+    }
 
 	if(this->unit == "")
 		this->unit = this->converter.getBaseUnit();
