@@ -26,7 +26,7 @@ namespace fnss {
 /**
  * Default buffer size, set if no buffer size is specified in the constructor
  */
-#define DEFAULT_BUFFER_SIZE "100packets"
+#define DEFAULT_BUFFER_SIZE "1kB"
 
 /**
  * Represent an edge of a topology
