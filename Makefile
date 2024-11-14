@@ -44,10 +44,10 @@ LDLIBS   =
 CLANG_INSTALLED := $(shell clang++ --version 2>/dev/null)
 ifdef CLANG_INSTALLED
 CXX      = clang++
-CXXFLAGS = -g -Wshadow -Wall -Wfatal-errors -std=c++11 -fPIC
+CXXFLAGS = -g -O2 -Wshadow -Wall -Wfatal-errors -std=c++11 -fPIC
 else
 CXX      = g++
-CXXFLAGS = -g -Wall -Wfatal-errors -fPIC
+CXXFLAGS = -g -O2 -Wall -Wfatal-errors -fPIC
 endif
 
 # File extensions / ignored files.
