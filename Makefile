@@ -167,8 +167,8 @@ run_test    = printf "Executing:   $1:  "; \
              if [ $$OUT -eq 0 ]; then \
                  echo "OK"; \
              else \
-                  rm $1; \
-                  exit 1; \
+                 rm $1; \
+                 exit 1; \
              fi \
 
 # Summary message
