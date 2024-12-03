@@ -302,6 +302,8 @@ void testEdge() {
 	cout<<"Edge test: ";
 
 	Edge e;
+
+	e.setBufferSize(Quantity("1kB", Units::Data));
 	// test default values
 	assert(e.getCapacity().toString() == DEFAULT_CAPACITY);
 	assert(e.getDelay().toString() == DEFAULT_DELAY);
@@ -520,7 +522,7 @@ void testEvent() {
 
 void testQuantity() {
 	cout<<"Quantity test: ";
-	Quantity t1(Units::Time);
+	Quantity t1("2days",Units::Time);
 	Quantity t2(1, "h", Units::Time);
 	Quantity t3("60min", Units::Time);
 	Quantity t4("3601 sec", Units::Time);

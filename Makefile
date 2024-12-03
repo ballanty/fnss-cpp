@@ -34,6 +34,9 @@ VERSION = 0.6.1
 NAME = fnss
 ARCHIVE_NAME  = fnss-cpp-api-$(VERSION)
 
+# BUILD TARGET
+BUILDTARGET = $(shell uname)
+
 # Compiler options
 LDFLAGS  =
 LDLIBS   =
@@ -132,8 +135,13 @@ remove_root = $(shell echo $1 | sed s/\[.]\*\[/]\*\[^/]\*\\\///)
 get_src     =  $2/$(call remove_root, $(basename $1)$(SRC_EXT))
 get_bin     = $(filter %$(notdir $1), $(BIN))
 get_bin_dep = $(filter $(subst $(HDR_EXT),$(SRC_EXT), $(filter $(patsubst ./%,%,$(HDR)), $1)), $(patsubst ./%,%,$(SRC)))
+ifeq ($(BUILDTARGET),Darwin)
+make_dep    = @$(CXX) -MM $(CXXFLAGS) $1 > $2.d; \
+              sed -i '' 's/.*:/$(subst /,\/,$@):/' $@.d
+else
 make_dep    = @$(CXX) -MM $(CXXFLAGS) $1 > $2.d; \
               sed -i 's/.*:/$(subst /,\/,$@):/' $@.d
+endif
 
 # Compile a file and print message. Args: <src_file> <dest_file> <cxx_options>
 compile     = @echo "Compiling:   $(strip $1) -> $(strip $2): " $(shell $(call compile_cmd, $1, $2, $3))
